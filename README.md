@@ -2,7 +2,7 @@
 
 Aplicación web serverless para registrar y visualizar hábitos personales y gastos en ARS.
 
-🔗 **Deploy**: _pendiente de configuración en Vercel_
+🔗 **Deploy**: [tp2-garcia-abkiewicz.vercel.app](https://tp2-garcia-abkiewicz.vercel.app) _(configurar en Vercel luego del primer merge a main)_
 
 ---
 
@@ -40,12 +40,21 @@ npm run dev
 
 ## Deploy en Vercel
 
-1. Importar el repositorio en [vercel.com](https://vercel.com).
-2. Framework preset: **Vite**.
-3. Agregar variables de entorno:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Deploy automático en cada push a `main`.
+1. Ir a [vercel.com](https://vercel.com) → **Add New Project**.
+2. Conectar el repo `TomasGarciaBournissen/tp2-garcia-abkiewicz`.
+3. Framework preset: **Vite** (se detecta automáticamente).
+4. En **Environment Variables**, agregar:
+   - `VITE_SUPABASE_URL` → tu Project URL de Supabase
+   - `VITE_SUPABASE_ANON_KEY` → tu anon key de Supabase
+5. Click en **Deploy**.
+6. Vercel asigna una URL automáticamente. Actualizar el link del README con esa URL.
+7. Cada push a `main` dispara un redeploy automático.
+
+### Configurar Supabase (primera vez)
+
+1. Ir a [supabase.com](https://supabase.com) → tu proyecto → **SQL Editor**.
+2. Pegar el contenido de `supabase/schema.sql` y ejecutar.
+3. Verificar que las tablas y policies se crearon correctamente en **Table Editor**.
 
 ---
 
