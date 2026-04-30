@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <header className="relative bg-white border-b border-gray-100 sticky top-0 z-20">
-      <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+      <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="w-7 h-7 bg-emerald-500 rounded-lg flex items-center justify-center">
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
