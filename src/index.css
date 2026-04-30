@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 * {
   box-sizing: border-box;
@@ -7,8 +8,27 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #f6f7f9;
-  color: #0f1117;
+  font-family: 'Outfit', system-ui, sans-serif;
+  background-color: #0f1117;
+  color: #f0f2f8;
   -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  --bg-base: #0f1117;
+  --bg-surface: #161b27;
+  --bg-sidebar: #111520;
+  --border: #1e2540;
+  --border-hover: #252d45;
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+  --accent-bg: #1a2e1d;
+  --text-primary: #f0f2f8;
+  --text-secondary: #e8eaf0;
+  --text-muted: #4a5278;
+  --text-hint: #3a4060;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
 }

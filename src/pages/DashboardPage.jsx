@@ -7,6 +7,20 @@ function formatARS(n) {
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n)
 }
 
+function mesLabel() {
+  return new Date().toLocaleString('es-AR', { month: 'long', year: 'numeric' }).toUpperCase()
+}
+
+const STAT_CARD = {
+  background: '#161b27',
+  border: '1px solid #1e2540',
+  borderRadius: 14,
+  padding: '22px 24px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 0,
+}
+
 export default function DashboardPage() {
   const { user } = useAuth()
   const [stats, setStats] = useState({ habitosHoy: 0, totalHabitos: 0, totalMes: 0, ultimoGasto: null, loading: true })
@@ -33,88 +47,124 @@ export default function DashboardPage() {
     if (user) fetchStats()
   }, [user])
 
-  const mes = new Date().toLocaleString('es-AR', { month: 'long', year: 'numeric' })
   const progreso = stats.totalHabitos > 0 ? (stats.habitosHoy / stats.totalHabitos) * 100 : 0
 
   if (stats.loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 80 }}>
+        <div style={{
+          width: 32, height: 32,
+          border: '3px solid #1e2540',
+          borderTopColor: '#22c55e',
+          borderRadius: '50%',
+          animation: 'spin 0.7s linear infinite',
+        }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Resumen</h1>
-        <p className="text-sm text-gray-400 mt-0.5 capitalize">{mes}</p>
+    <div style={{ maxWidth: 820 }}>
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: '#f0f2f8', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
+          Resumen
+        </h1>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#4a5278', marginTop: 6 }}>
+          {mesLabel()}
+        </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-gray-500">Hábitos hoy</p>
-            <div className="w-8 h-8 bg-emerald-100 rounded-xl flex items-center justify-center">
-              <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <p className="text-3xl font-bold text-gray-900">
-            {stats.habitosHoy}
-            <span className="text-lg text-gray-300 font-normal"> / {stats.totalHabitos}</span>
+      {/* Stat cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+
+        {/* Hábitos hoy */}
+        <div style={{ ...STAT_CARD, borderTop: '2px solid #22c55e' }}>
+          <p style={{ fontSize: 11, fontWeight: 500, color: '#4a5278', letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: "'JetBrains Mono', monospace", marginBottom: 14 }}>
+            Hábitos hoy
           </p>
-          <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${progreso}%` }} />
-          </div>
-          <Link to="/habitos" className="text-xs text-emerald-600 font-medium hover:underline mt-3 inline-block">
+          {stats.totalHabitos === 0 ? (
+            <p style={{ fontSize: 28, fontWeight: 700, color: '#3a4060' }}>—</p>
+          ) : (
+            <>
+              <p style={{ fontSize: 32, fontWeight: 800, color: '#f0f2f8', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                {stats.habitosHoy}
+                <span style={{ fontSize: 18, fontWeight: 400, color: '#3a4060' }}> / {stats.totalHabitos}</span>
+              </p>
+              <div style={{ marginTop: 14, height: 4, background: '#1e2540', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ height: '100%', background: '#22c55e', borderRadius: 99, width: `${progreso}%`, transition: 'width 0.4s' }} />
+              </div>
+            </>
+          )}
+          <Link to="/habitos" style={{ marginTop: 16, fontSize: 12, color: '#22c55e', textDecoration: 'none', fontWeight: 500 }}>
             Ver hábitos →
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-gray-500">Gasto del mes</p>
-            <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
-              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <p className="text-3xl font-bold text-gray-900">{formatARS(stats.totalMes)}</p>
-          <Link to="/gastos" className="text-xs text-blue-600 font-medium hover:underline mt-3 inline-block">
+        {/* Gasto del mes */}
+        <div style={{ ...STAT_CARD, borderTop: '2px solid #3b82f6' }}>
+          <p style={{ fontSize: 11, fontWeight: 500, color: '#4a5278', letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: "'JetBrains Mono', monospace", marginBottom: 14 }}>
+            Gasto del mes
+          </p>
+          <p style={{ fontSize: 28, fontWeight: 800, color: '#f0f2f8', letterSpacing: '-0.03em', lineHeight: 1 }}>
+            {formatARS(stats.totalMes)}
+          </p>
+          <Link to="/gastos" style={{ marginTop: 16, fontSize: 12, color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>
             Ver gastos →
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-gray-500">Último gasto</p>
-            <div className="w-8 h-8 bg-orange-100 rounded-xl flex items-center justify-center">
-              <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-            </div>
-          </div>
+        {/* Último gasto */}
+        <div style={{ ...STAT_CARD, borderTop: '2px solid #f59e0b' }}>
+          <p style={{ fontSize: 11, fontWeight: 500, color: '#4a5278', letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: "'JetBrains Mono', monospace", marginBottom: 14 }}>
+            Último gasto
+          </p>
           {stats.ultimoGasto ? (
             <>
-              <p className="text-3xl font-bold text-gray-900">{formatARS(stats.ultimoGasto.monto)}</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p style={{ fontSize: 28, fontWeight: 800, color: '#f0f2f8', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                {formatARS(stats.ultimoGasto.monto)}
+              </p>
+              <p style={{ fontSize: 12, color: '#4a5278', marginTop: 8 }}>
                 {stats.ultimoGasto.categoria}{stats.ultimoGasto.descripcion ? ` · ${stats.ultimoGasto.descripcion}` : ''}
               </p>
             </>
           ) : (
-            <p className="text-2xl font-bold text-gray-300">—</p>
+            <p style={{ fontSize: 28, fontWeight: 700, color: '#3a4060' }}>—</p>
           )}
         </div>
       </div>
 
+      {/* Empty state si no hay datos */}
+      {stats.totalHabitos === 0 && stats.totalMes === 0 && (
+        <div style={{
+          border: '1px dashed #1e2540',
+          borderRadius: 14,
+          padding: '48px 32px',
+          textAlign: 'center',
+        }}>
+          <div style={{ fontSize: 36, opacity: 0.2, marginBottom: 16 }}>📊</div>
+          <p style={{ fontSize: 15, fontWeight: 600, color: '#4a5278', marginBottom: 6 }}>
+            Tu dashboard está vacío
+          </p>
+          <p style={{ fontSize: 13, color: '#3a4060' }}>
+            Creá tus primeros hábitos y gastos para ver el resumen acá
+          </p>
+        </div>
+      )}
+
+      {/* Motivacional */}
       {stats.totalHabitos > 0 && (
-        <div className={`rounded-2xl p-5 ${progreso === 100 ? 'bg-emerald-500' : 'bg-white border border-gray-100 shadow-sm'}`}>
-          <p className={`text-sm font-medium ${progreso === 100 ? 'text-white' : 'text-gray-700'}`}>
+        <div style={{
+          marginTop: 8,
+          background: progreso === 100 ? 'var(--accent-bg)' : '#161b27',
+          border: `1px solid ${progreso === 100 ? 'rgba(34,197,94,0.3)' : '#1e2540'}`,
+          borderRadius: 14,
+          padding: '16px 20px',
+        }}>
+          <p style={{ fontSize: 14, color: progreso === 100 ? '#22c55e' : '#4a5278' }}>
             {progreso === 100
-              ? '¡Completaste todos tus hábitos de hoy! 🎉'
+              ? '¡Completaste todos tus hábitos de hoy!'
               : `Te quedan ${stats.totalHabitos - stats.habitosHoy} hábito${stats.totalHabitos - stats.habitosHoy !== 1 ? 's' : ''} por completar hoy.`}
           </p>
         </div>

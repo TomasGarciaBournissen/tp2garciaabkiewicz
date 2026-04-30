@@ -15,7 +15,7 @@ export default function GastosPage() {
   const [editing, setEditing] = useState(null)
   const [filtro, setFiltro] = useState('Todas')
 
-  const mes = new Date().toLocaleString('es-AR', { month: 'long', year: 'numeric' })
+  const mes = new Date().toLocaleString('es-AR', { month: 'long', year: 'numeric' }).toUpperCase()
   const gastosFiltrados = filtro === 'Todas' ? gastos : gastos.filter(g => g.categoria === filtro)
 
   async function handleCreate(fields) {
@@ -29,75 +29,120 @@ export default function GastosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div style={{ maxWidth: 820 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gastos</h1>
-          <p className="text-sm text-gray-400 mt-0.5 capitalize">{mes}</p>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: '#f0f2f8', letterSpacing: '-0.03em' }}>Gastos</h1>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#4a5278', marginTop: 6 }}>{mes}</p>
         </div>
         <button
           onClick={() => { setShowForm(true); setEditing(null) }}
-          className="bg-emerald-500 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-600 transition-colors"
+          style={{
+            background: '#22c55e',
+            color: '#000',
+            border: 'none',
+            borderRadius: 10,
+            padding: '10px 18px',
+            fontSize: 13,
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'background 0.15s',
+            fontFamily: 'inherit',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = '#16a34a'}
+          onMouseLeave={e => e.currentTarget.style.background = '#22c55e'}
         >
           + Nuevo gasto
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex items-center justify-between">
+      {/* Total card */}
+      <div style={{
+        background: '#161b27',
+        border: '1px solid #1e2540',
+        borderRadius: 14,
+        padding: '20px 24px',
+        marginBottom: 20,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
         <div>
-          <p className="text-sm font-medium text-gray-400">Total del mes</p>
-          <p className="text-4xl font-bold text-gray-900 mt-1">{formatARS(total)}</p>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#4a5278', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+            Total del mes
+          </p>
+          <p style={{ fontSize: 36, fontWeight: 800, color: '#f0f2f8', letterSpacing: '-0.03em' }}>
+            {formatARS(total)}
+          </p>
         </div>
-        <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center">
-          <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div style={{
+          width: 44, height: 44,
+          background: 'rgba(59,130,246,0.12)',
+          borderRadius: 12,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="20" height="20" fill="none" stroke="#3b82f6" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
       </div>
 
+      {/* Form */}
       {(showForm || editing) && (
-        <GastoForm
-          initial={editing}
-          onSubmit={editing ? handleUpdate : handleCreate}
-          onCancel={() => { setShowForm(false); setEditing(null) }}
-        />
+        <div style={{ marginBottom: 20 }}>
+          <GastoForm
+            initial={editing}
+            onSubmit={editing ? handleUpdate : handleCreate}
+            onCancel={() => { setShowForm(false); setEditing(null) }}
+          />
+        </div>
       )}
 
-      <div className="flex gap-2 flex-wrap">
+      {/* Filter tabs */}
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
         {CATEGORIAS.map(c => (
           <button
             key={c}
             onClick={() => setFiltro(c)}
-            className={`text-xs font-semibold px-3.5 py-1.5 rounded-full transition-colors ${
-              filtro === c
-                ? 'bg-gray-900 text-white'
-                : 'bg-white border border-gray-200 text-gray-500 hover:border-gray-300'
-            }`}
+            style={{
+              padding: '6px 14px',
+              borderRadius: 8,
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+              fontFamily: 'inherit',
+              background: filtro === c ? 'var(--accent-bg)' : 'transparent',
+              color: filtro === c ? '#22c55e' : '#4a5278',
+              border: filtro === c ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1e2540',
+            }}
           >
             {c}
           </button>
         ))}
       </div>
 
+      {/* List */}
       {loading ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+          <div style={{ width: 28, height: 28, border: '3px solid #1e2540', borderTopColor: '#22c55e', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+          <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
         </div>
       ) : gastosFiltrados.length === 0 ? (
-        <div className="text-center py-16">
-          <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <p className="text-gray-500 font-medium">
+        <div style={{ border: '1px dashed #1e2540', borderRadius: 14, padding: '56px 32px', textAlign: 'center' }}>
+          <div style={{ fontSize: 32, opacity: 0.2, marginBottom: 14 }}>💸</div>
+          <p style={{ fontSize: 14, fontWeight: 600, color: '#4a5278', marginBottom: 4 }}>
             {filtro === 'Todas' ? 'Sin gastos este mes' : `Sin gastos en "${filtro}"`}
+          </p>
+          <p style={{ fontSize: 12, color: '#3a4060' }}>
+            {filtro === 'Todas' ? 'Registrá tu primer gasto usando el botón de arriba' : 'Probá con otro filtro'}
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div style={{ background: '#161b27', border: '1px solid #1e2540', borderRadius: 14, overflow: 'hidden' }}>
           {gastosFiltrados.map((g, i) => (
-            <div key={g.id} className={i > 0 ? 'border-t border-gray-50' : ''}>
+            <div key={g.id} style={i > 0 ? { borderTop: '1px solid #1e2540' } : {}}>
               <GastoItem
                 gasto={g}
                 onEdit={() => { setEditing(g); setShowForm(false) }}

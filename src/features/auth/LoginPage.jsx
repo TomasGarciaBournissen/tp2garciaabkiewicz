@@ -2,6 +2,30 @@ import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 
+const inp = {
+  width: '100%',
+  background: '#0f1117',
+  border: '1px solid #1e2540',
+  borderRadius: 10,
+  padding: '12px 14px',
+  fontSize: 14,
+  color: '#f0f2f8',
+  outline: 'none',
+  transition: 'border-color 0.15s',
+  fontFamily: 'inherit',
+}
+
+const label = {
+  display: 'block',
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: '#4a5278',
+  marginBottom: 8,
+  fontFamily: "'JetBrains Mono', monospace",
+}
+
 export default function LoginPage() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
@@ -10,6 +34,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [focused, setFocused] = useState(null)
 
   const justRegistered = searchParams.get('registered') === 'true'
 
@@ -24,65 +49,124 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f6f7f9] px-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500 mb-4">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'var(--bg-base)',
+      padding: '24px 16px',
+    }}>
+      <div style={{ width: '100%', maxWidth: 380 }}>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{
+            width: 52,
+            height: 52,
+            background: '#22c55e',
+            borderRadius: 14,
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 20,
+          }}>
+            <svg width="26" height="26" fill="none" stroke="#000" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Bienvenido</h1>
-          <p className="text-sm text-gray-500 mt-1">Iniciá sesión en tu cuenta</p>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: '#f0f2f8', letterSpacing: '-0.02em', marginBottom: 6 }}>
+            Bienvenido
+          </h1>
+          <p style={{ fontSize: 14, color: '#4a5278' }}>Iniciá sesión en tu cuenta</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        {/* Card */}
+        <div style={{
+          background: '#161b27',
+          border: '1px solid #1e2540',
+          borderRadius: 20,
+          padding: '32px 28px',
+        }}>
           {justRegistered && (
-            <div className="mb-5 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+            <div style={{
+              marginBottom: 20,
+              padding: '12px 14px',
+              background: 'var(--accent-bg)',
+              border: '1px solid rgba(34,197,94,0.25)',
+              borderRadius: 10,
+              fontSize: 13,
+              color: '#22c55e',
+            }}>
               ¡Cuenta creada! Revisá tu email para confirmar y luego iniciá sesión.
             </div>
           )}
           {error && (
-            <div className="mb-5 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl p-3">
+            <div style={{
+              marginBottom: 20,
+              padding: '12px 14px',
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.25)',
+              borderRadius: 10,
+              fontSize: 13,
+              color: '#f87171',
+            }}>
               {error}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-5">
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+              <label style={label}>Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all"
+                onFocus={() => setFocused('email')}
+                onBlur={() => setFocused(null)}
+                style={{ ...inp, borderColor: focused === 'email' ? '#22c55e' : '#1e2540' }}
                 placeholder="tu@email.com"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Contraseña</label>
+              <label style={label}>Contraseña</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all"
+                onFocus={() => setFocused('password')}
+                onBlur={() => setFocused(null)}
+                style={{ ...inp, borderColor: focused === 'password' ? '#22c55e' : '#1e2540' }}
                 placeholder="••••••••"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold hover:bg-emerald-600 disabled:opacity-50 transition-colors"
+              style={{
+                width: '100%',
+                background: loading ? '#15803d' : '#22c55e',
+                color: '#000',
+                border: 'none',
+                borderRadius: 10,
+                padding: '13px',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'background 0.15s',
+                fontFamily: 'inherit',
+                marginTop: 4,
+              }}
             >
               {loading ? 'Ingresando...' : 'Ingresar'}
             </button>
           </form>
         </div>
 
-        <p className="mt-5 text-center text-sm text-gray-500">
+        <p style={{ marginTop: 20, textAlign: 'center', fontSize: 13, color: '#4a5278' }}>
           ¿No tenés cuenta?{' '}
-          <Link to="/register" className="text-emerald-600 font-medium hover:underline">
+          <Link to="/register" style={{ color: '#22c55e', fontWeight: 600, textDecoration: 'none' }}>
             Registrate gratis
           </Link>
         </p>

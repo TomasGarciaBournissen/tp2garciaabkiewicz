@@ -21,44 +21,52 @@ export default function HabitosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div style={{ maxWidth: 820 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Hábitos</h1>
-          <p className="text-sm text-gray-400 mt-0.5">{habitos.length} hábito{habitos.length !== 1 ? 's' : ''} registrado{habitos.length !== 1 ? 's' : ''}</p>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: '#f0f2f8', letterSpacing: '-0.03em' }}>Hábitos</h1>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#4a5278', marginTop: 6 }}>
+            {habitos.length} HÁBITO{habitos.length !== 1 ? 'S' : ''} REGISTRADO{habitos.length !== 1 ? 'S' : ''}
+          </p>
         </div>
         <button
           onClick={() => { setShowForm(true); setEditing(null) }}
-          className="bg-emerald-500 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-600 transition-colors"
+          style={{
+            background: '#22c55e', color: '#000', border: 'none', borderRadius: 10,
+            padding: '10px 18px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+            transition: 'background 0.15s', fontFamily: 'inherit',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = '#16a34a'}
+          onMouseLeave={e => e.currentTarget.style.background = '#22c55e'}
         >
           + Nuevo hábito
         </button>
       </div>
 
       {(showForm || editing) && (
-        <HabitoForm
-          initial={editing}
-          onSubmit={editing ? handleUpdate : handleCreate}
-          onCancel={() => { setShowForm(false); setEditing(null) }}
-        />
+        <div style={{ marginBottom: 20 }}>
+          <HabitoForm
+            initial={editing}
+            onSubmit={editing ? handleUpdate : handleCreate}
+            onCancel={() => { setShowForm(false); setEditing(null) }}
+          />
+        </div>
       )}
 
       {loading ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+          <div style={{ width: 28, height: 28, border: '3px solid #1e2540', borderTopColor: '#22c55e', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+          <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
         </div>
       ) : habitos.length === 0 ? (
-        <div className="text-center py-16">
-          <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <p className="text-gray-500 font-medium">No tenés hábitos todavía</p>
-          <p className="text-sm text-gray-400 mt-1">Creá tu primer hábito para empezar a trackear</p>
+        <div style={{ border: '1px dashed #1e2540', borderRadius: 14, padding: '56px 32px', textAlign: 'center' }}>
+          <div style={{ fontSize: 32, opacity: 0.2, marginBottom: 14 }}>✓</div>
+          <p style={{ fontSize: 14, fontWeight: 600, color: '#4a5278', marginBottom: 4 }}>No tenés hábitos todavía</p>
+          <p style={{ fontSize: 12, color: '#3a4060' }}>Creá tu primer hábito para empezar a trackear</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14 }}>
           {habitos.map(h => (
             <HabitoCard
               key={h.id}

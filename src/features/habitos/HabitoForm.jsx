@@ -1,14 +1,39 @@
 import { useState } from 'react'
 
-const COLORES = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
+const COLORES = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4']
+
+const inp = {
+  width: '100%',
+  background: '#0f1117',
+  border: '1px solid #1e2540',
+  borderRadius: 10,
+  padding: '11px 14px',
+  fontSize: 14,
+  color: '#f0f2f8',
+  outline: 'none',
+  transition: 'border-color 0.15s',
+  fontFamily: 'inherit',
+}
+
+const lbl = {
+  display: 'block',
+  fontSize: 11,
+  fontWeight: 500,
+  letterSpacing: '0.07em',
+  textTransform: 'uppercase',
+  color: '#4a5278',
+  marginBottom: 7,
+  fontFamily: "'JetBrains Mono', monospace",
+}
 
 export default function HabitoForm({ initial, onSubmit, onCancel }) {
   const [nombre, setNombre] = useState(initial?.nombre ?? '')
   const [descripcion, setDescripcion] = useState(initial?.descripcion ?? '')
   const [frecuencia, setFrecuencia] = useState(initial?.frecuencia ?? 'diaria')
-  const [color, setColor] = useState(initial?.color ?? '#6366f1')
+  const [color, setColor] = useState(initial?.color ?? '#22c55e')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [focused, setFocused] = useState(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -26,72 +51,97 @@ export default function HabitoForm({ initial, onSubmit, onCancel }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4"
+      style={{ background: '#161b27', border: '1px solid #1e2540', borderRadius: 14, padding: '24px', display: 'flex', flexDirection: 'column', gap: 16 }}
     >
-      <h2 className="text-lg font-semibold text-gray-800">
+      <h2 style={{ fontSize: 15, fontWeight: 600, color: '#f0f2f8' }}>
         {initial ? 'Editar hábito' : 'Nuevo hábito'}
       </h2>
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">{error}</p>
+        <div style={{ padding: '10px 14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 10, fontSize: 13, color: '#f87171' }}>
+          {error}
+        </div>
       )}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+        <label style={lbl}>Nombre</label>
         <input
           required
           value={nombre}
           onChange={e => setNombre(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          onFocus={() => setFocused('nombre')}
+          onBlur={() => setFocused(null)}
+          style={{ ...inp, borderColor: focused === 'nombre' ? '#22c55e' : '#1e2540' }}
           placeholder="Ej: Meditar"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+        <label style={lbl}>Descripción</label>
         <input
           value={descripcion}
           onChange={e => setDescripcion(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          onFocus={() => setFocused('desc')}
+          onBlur={() => setFocused(null)}
+          style={{ ...inp, borderColor: focused === 'desc' ? '#22c55e' : '#1e2540' }}
           placeholder="Opcional"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Frecuencia</label>
+        <label style={lbl}>Frecuencia</label>
         <select
           value={frecuencia}
           onChange={e => setFrecuencia(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          onFocus={() => setFocused('frec')}
+          onBlur={() => setFocused(null)}
+          style={{ ...inp, borderColor: focused === 'frec' ? '#22c55e' : '#1e2540' }}
         >
-          <option value="diaria">Diaria</option>
-          <option value="semanal">Semanal</option>
+          <option value="diaria" style={{ background: '#161b27' }}>Diaria</option>
+          <option value="semanal" style={{ background: '#161b27' }}>Semanal</option>
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
-        <div className="flex gap-2">
+        <label style={lbl}>Color</label>
+        <div style={{ display: 'flex', gap: 10 }}>
           {COLORES.map(c => (
             <button
               key={c}
               type="button"
               onClick={() => setColor(c)}
-              className={`w-7 h-7 rounded-full border-2 transition-transform ${
-                color === c ? 'border-gray-800 scale-110' : 'border-transparent'
-              }`}
-              style={{ backgroundColor: c }}
+              style={{
+                width: 28, height: 28,
+                borderRadius: '50%',
+                background: c,
+                border: color === c ? '2px solid #f0f2f8' : '2px solid transparent',
+                cursor: 'pointer',
+                transform: color === c ? 'scale(1.15)' : 'scale(1)',
+                transition: 'all 0.15s',
+                outline: color === c ? '2px solid ' + c : 'none',
+                outlineOffset: 2,
+              }}
             />
           ))}
         </div>
       </div>
-      <div className="flex gap-3 pt-2">
+      <div style={{ display: 'flex', gap: 10, paddingTop: 4 }}>
         <button
           type="submit"
           disabled={loading}
-          className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          style={{
+            background: '#22c55e', color: '#000', border: 'none', borderRadius: 10,
+            padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
+            transition: 'background 0.15s', fontFamily: 'inherit', opacity: loading ? 0.7 : 1,
+          }}
         >
           {loading ? 'Guardando...' : initial ? 'Guardar cambios' : 'Crear hábito'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-sm font-medium text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg border border-gray-200 transition-colors"
+          style={{
+            background: 'transparent', color: '#4a5278', border: '1px solid #1e2540', borderRadius: 10,
+            padding: '10px 20px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+            transition: 'all 0.15s', fontFamily: 'inherit',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#f0f2f8'; e.currentTarget.style.borderColor = '#252d45' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#4a5278'; e.currentTarget.style.borderColor = '#1e2540' }}
         >
           Cancelar
         </button>
