@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useHabitos } from './useHabitos'
+import { useHabitosLog } from './useHabitosLog'
 import HabitoForm from './HabitoForm'
 import HabitoCard from './HabitoCard'
 
 export default function HabitosPage() {
   const { habitos, loading, crearHabito, actualizarHabito, eliminarHabito } = useHabitos()
+  const { logHoy, toggleCompletado } = useHabitosLog()
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState(null)
 
@@ -52,6 +54,8 @@ export default function HabitosPage() {
             <HabitoCard
               key={h.id}
               habito={h}
+              completadoHoy={logHoy.includes(h.id)}
+              onToggle={() => toggleCompletado(h.id)}
               onEdit={() => { setEditing(h); setShowForm(false) }}
               onDelete={() => eliminarHabito(h.id)}
             />
