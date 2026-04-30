@@ -54,7 +54,7 @@ export default function RegisterPage() {
       background: 'var(--bg-base)',
       padding: '24px 16px',
     }}>
-      <div style={{ width: '100%', maxWidth: 380 }}>
+      <div style={{ width: '100%', maxWidth: 460 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
@@ -82,7 +82,7 @@ export default function RegisterPage() {
           background: '#161b27',
           border: '1px solid #1e2540',
           borderRadius: 20,
-          padding: '32px 28px',
+          padding: '40px 36px',
         }}>
           {error && (
             <div style={{
