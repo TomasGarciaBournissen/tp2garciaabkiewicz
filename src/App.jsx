@@ -5,6 +5,7 @@ import MainLayout from './layouts/MainLayout'
 import LoginPage from './features/auth/LoginPage'
 import RegisterPage from './features/auth/RegisterPage'
 import HabitosPage from './features/habitos/HabitosPage'
+import GastosPage from './features/gastos/GastosPage'
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
             }
           >
             <Route path="/dashboard" element={<div className="text-gray-600">Dashboard (próximamente)</div>} />
-            <Route path="/gastos" element={<div className="text-gray-600">Gastos (próximamente)</div>} />
+            <Route path="/gastos" element={<GastosPage />} />
             <Route path="/habitos" element={<HabitosPage />} />
           </Route>
         </Routes>
