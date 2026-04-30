@@ -21,33 +21,42 @@ export default function HabitosPage() {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Mis hábitos</h1>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Hábitos</h1>
+          <p className="text-sm text-gray-400 mt-0.5">{habitos.length} hábito{habitos.length !== 1 ? 's' : ''} registrado{habitos.length !== 1 ? 's' : ''}</p>
+        </div>
         <button
           onClick={() => { setShowForm(true); setEditing(null) }}
-          className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          className="bg-emerald-500 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-600 transition-colors"
         >
           + Nuevo hábito
         </button>
       </div>
 
       {(showForm || editing) && (
-        <div className="mb-6">
-          <HabitoForm
-            initial={editing}
-            onSubmit={editing ? handleUpdate : handleCreate}
-            onCancel={() => { setShowForm(false); setEditing(null) }}
-          />
-        </div>
+        <HabitoForm
+          initial={editing}
+          onSubmit={editing ? handleUpdate : handleCreate}
+          onCancel={() => { setShowForm(false); setEditing(null) }}
+        />
       )}
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : habitos.length === 0 ? (
-        <p className="text-center text-gray-500 py-12">No tenés hábitos registrados todavía.</p>
+        <div className="text-center py-16">
+          <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg className="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 font-medium">No tenés hábitos todavía</p>
+          <p className="text-sm text-gray-400 mt-1">Creá tu primer hábito para empezar a trackear</p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {habitos.map(h => (

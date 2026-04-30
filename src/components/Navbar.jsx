@@ -12,30 +12,40 @@ export default function Navbar() {
   }
 
   const linkClass = ({ isActive }) =>
-    `text-sm font-medium transition-colors ${
-      isActive ? 'text-indigo-600' : 'text-gray-600 hover:text-gray-900'
+    `text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
+      isActive
+        ? 'bg-emerald-50 text-emerald-700'
+        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
     }`
 
   return (
-    <header className="relative bg-white border-b border-gray-200">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link to="/dashboard" className="font-semibold text-gray-900 text-base">
-          HábitosApp
+    <header className="relative bg-white border-b border-gray-100 sticky top-0 z-20">
+      <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+        <Link to="/dashboard" className="flex items-center gap-2">
+          <div className="w-7 h-7 bg-emerald-500 rounded-lg flex items-center justify-center">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span className="font-bold text-gray-900 text-base">HábitosApp</span>
         </Link>
 
         {user && (
           <>
-            <nav className="hidden md:flex items-center gap-6">
+            <nav className="hidden md:flex items-center gap-1">
               <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
               <NavLink to="/gastos" className={linkClass}>Gastos</NavLink>
               <NavLink to="/habitos" className={linkClass}>Hábitos</NavLink>
+            </nav>
+            <div className="hidden md:flex items-center gap-3">
+              <span className="text-xs text-gray-400 truncate max-w-[160px]">{user.email}</span>
               <button
                 onClick={handleLogout}
-                className="text-sm font-medium text-gray-500 hover:text-red-600 transition-colors"
+                className="text-xs font-medium text-gray-500 hover:text-red-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:border-red-200 transition-colors"
               >
                 Salir
               </button>
-            </nav>
+            </div>
             <MobileMenu />
           </>
         )}
