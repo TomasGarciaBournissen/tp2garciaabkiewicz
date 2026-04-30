@@ -29,7 +29,7 @@ export default function GastosPage() {
   }
 
   return (
-    <div style={{ maxWidth: 820 }}>
+    <div>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
