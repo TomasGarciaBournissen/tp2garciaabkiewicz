@@ -1,16 +1,109 @@
-# React + Vite
+# TP2 — Dashboard de Hábitos y Gastos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web serverless para registrar y visualizar hábitos personales y gastos en ARS.
 
-Currently, two official plugins are available:
+🔗 **Deploy**: _pendiente de configuración en Vercel_
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Tecnología | Rol | Justificación |
+|---|---|---|
+| React + Vite | Frontend | Rápido, ecosystem amplio, HMR eficiente |
+| Tailwind CSS | Estilos | Utility-first, sin overhead de CSS custom |
+| React Router | Navegación | Estándar de facto para SPAs en React |
+| Supabase | Auth + DB + RLS | Backend serverless completo, PostgreSQL real, Auth integrado |
+| Vercel | Deploy | CI/CD automático desde GitHub, free tier generoso |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Correr localmente
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/TomasGarciaBournissen/tp2-garcia-abkiewicz.git
+cd tp2-garcia-abkiewicz
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Configurar variables de entorno
+cp .env.example .env.local
+# Editar .env.local con tu URL y anon key de Supabase
+
+# 4. Correr en modo desarrollo
+npm run dev
+```
+
+---
+
+## Deploy en Vercel
+
+1. Importar el repositorio en [vercel.com](https://vercel.com).
+2. Framework preset: **Vite**.
+3. Agregar variables de entorno:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+4. Deploy automático en cada push a `main`.
+
+---
+
+## Convenciones de desarrollo
+
+### Branching
+
+```
+main          → siempre funcional, deployado
+develop       → integración
+feature/tomi-*      → features de Tomas Garcia
+feature/companero-* → features de Tomas Abkiewicz
+```
+
+### Conventional Commits
+
+```
+feat:     nueva funcionalidad
+fix:      corrección de bug
+chore:    tareas de mantenimiento/configuración
+docs:     cambios en documentación
+refactor: refactorización sin cambio de comportamiento
+style:    cambios visuales / formato
+test:     tests
+```
+
+### Versionado (SemVer)
+
+- `0.1.0` → versión inicial de desarrollo
+- `0.2.0` → primera entrega funcional completa
+
+### Flujo de PRs
+
+Cada feature branch se abre como PR contra su rama base (ver `INSTRUCCIONES_PR.md`). Los merges se hacen desde la UI de GitHub manteniendo el historial de commits.
+
+---
+
+## Roadmap
+
+### Entrega 1 (30/4) — MVP
+- [x] Auth completo (registro, login, logout)
+- [x] CRUD de Gastos con filtro por categoría
+- [x] CRUD de Hábitos con completado diario
+- [x] Dashboard con resumen
+- [x] RLS configurado en Supabase
+- [x] Deploy en Vercel
+
+### Entrega 2 (semanas 3-6)
+- [ ] Rachas de hábitos (días consecutivos)
+- [ ] Gráficos de gastos por categoría
+- [ ] Exportar gastos a CSV
+- [ ] Notificaciones de hábitos pendientes
+
+---
+
+## Integrantes
+
+| Nombre | GitHub | Rol |
+|---|---|---|
+| Tomas Garcia | [@TomasGarciaBournissen](https://github.com/TomasGarciaBournissen) | Dev 1 — Auth + Gastos + Setup |
+| Tomas Abkiewicz | tomas.abkiewicz1 | Dev 2 — Hábitos + Dashboard + Schema |
