@@ -101,6 +101,24 @@ Cada feature branch se abre como PR contra su rama base (ver `INSTRUCCIONES_PR.m
 
 ---
 
+## Esquema de base de datos
+
+El schema completo se encuentra en [`supabase/schema.sql`](supabase/schema.sql). Para aplicarlo, pegarlo en el SQL Editor de tu proyecto de Supabase.
+
+### Tablas
+
+| Tabla | Descripción |
+|---|---|
+| `gastos` | Gastos del usuario: monto (ARS), categoría, descripción, fecha |
+| `habitos` | Hábitos del usuario: nombre, descripción, frecuencia (diaria/semanal), color |
+| `habitos_log` | Registro de completado diario de hábitos |
+
+### RLS (Row Level Security)
+
+Todas las tablas tienen RLS activado. Las policies aplican `auth.uid() = user_id` en todas las operaciones (SELECT, INSERT, UPDATE, DELETE), garantizando que cada usuario solo accede a sus propios datos.
+
+---
+
 ## Integrantes
 
 | Nombre | GitHub | Rol |
