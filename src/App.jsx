@@ -6,6 +6,7 @@ import LoginPage from './features/auth/LoginPage'
 import RegisterPage from './features/auth/RegisterPage'
 import HabitosPage from './features/habitos/HabitosPage'
 import GastosPage from './features/gastos/GastosPage'
+import DashboardPage from './pages/DashboardPage'
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
               </PrivateRoute>
             }
           >
-            <Route path="/dashboard" element={<div className="text-gray-600">Dashboard (próximamente)</div>} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/gastos" element={<GastosPage />} />
             <Route path="/habitos" element={<HabitosPage />} />
           </Route>
