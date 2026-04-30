@@ -51,3 +51,48 @@ create table if not exists public.habitos_log (
 alter table public.gastos enable row level security;
 alter table public.habitos enable row level security;
 alter table public.habitos_log enable row level security;
+
+-- ============================================================
+-- POLICIES: gastos
+-- Solo el dueño puede ver, insertar, actualizar y borrar sus gastos
+-- ============================================================
+create policy "gastos: select propio" on public.gastos
+  for select using (auth.uid() = user_id);
+
+create policy "gastos: insert propio" on public.gastos
+  for insert with check (auth.uid() = user_id);
+
+create policy "gastos: update propio" on public.gastos
+  for update using (auth.uid() = user_id);
+
+create policy "gastos: delete propio" on public.gastos
+  for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- POLICIES: habitos
+-- Solo el dueño puede ver, insertar, actualizar y borrar sus hábitos
+-- ============================================================
+create policy "habitos: select propio" on public.habitos
+  for select using (auth.uid() = user_id);
+
+create policy "habitos: insert propio" on public.habitos
+  for insert with check (auth.uid() = user_id);
+
+create policy "habitos: update propio" on public.habitos
+  for update using (auth.uid() = user_id);
+
+create policy "habitos: delete propio" on public.habitos
+  for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- POLICIES: habitos_log
+-- Solo el dueño puede ver, insertar y borrar sus registros de log
+-- ============================================================
+create policy "habitos_log: select propio" on public.habitos_log
+  for select using (auth.uid() = user_id);
+
+create policy "habitos_log: insert propio" on public.habitos_log
+  for insert with check (auth.uid() = user_id);
+
+create policy "habitos_log: delete propio" on public.habitos_log
+  for delete using (auth.uid() = user_id);
