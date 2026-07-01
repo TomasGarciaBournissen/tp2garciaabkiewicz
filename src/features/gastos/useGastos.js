@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { useAuth } from '../auth/AuthContext'
+import { useAuth } from '../auth/useAuth'
+import { calcularTotalGastos } from '../../lib/gastosUtils'
 
 export function useGastos() {
   const { user } = useAuth()
@@ -25,6 +26,7 @@ export function useGastos() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount, ver deuda técnica en CALIDAD.md
     if (user) fetchGastos()
   }, [user])
 
@@ -60,7 +62,7 @@ export function useGastos() {
     setGastos(prev => prev.filter(g => g.id !== id))
   }
 
-  const total = gastos.reduce((sum, g) => sum + Number(g.monto), 0)
+  const total = calcularTotalGastos(gastos)
 
   return { gastos, loading, error, total, crearGasto, actualizarGasto, eliminarGasto }
 }

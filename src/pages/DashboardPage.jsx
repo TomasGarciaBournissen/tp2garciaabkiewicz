@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { useAuth } from '../features/auth/AuthContext'
-
-function formatARS(n) {
-  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n)
-}
-
-function mesLabel() {
-  return new Date().toLocaleString('es-AR', { month: 'long', year: 'numeric' }).toUpperCase()
-}
+import { useAuth } from '../features/auth/useAuth'
+import { formatARS, mesLabel } from '../lib/format'
+import { calcularTotalGastos } from '../lib/gastosUtils'
+import { calcularProgreso } from '../lib/habitosUtils'
 
 const STAT_CARD = {
   background: '#161b27',
@@ -39,7 +34,7 @@ export default function DashboardPage() {
       setStats({
         habitosHoy: habitosHoy ?? 0,
         totalHabitos: totalHabitos ?? 0,
-        totalMes: (gastosMes ?? []).reduce((s, g) => s + Number(g.monto), 0),
+        totalMes: calcularTotalGastos(gastosMes ?? []),
         ultimoGasto: ultimoGastoArr?.[0] ?? null,
         loading: false,
       })
@@ -47,7 +42,7 @@ export default function DashboardPage() {
     if (user) fetchStats()
   }, [user])
 
-  const progreso = stats.totalHabitos > 0 ? (stats.habitosHoy / stats.totalHabitos) * 100 : 0
+  const progreso = calcularProgreso(stats.habitosHoy, stats.totalHabitos)
 
   if (stats.loading) {
     return (

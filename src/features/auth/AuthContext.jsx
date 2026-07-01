@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
-const AuthContext = createContext(null)
+// eslint-disable-next-line react-refresh/only-export-components -- el hook vive en useAuth.js; el contexto se comparte desde acá porque separarlo colisiona con AuthContext.jsx en filesystems case-insensitive (macOS)
+export const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -33,10 +34,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   )
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth debe usarse dentro de AuthProvider')
-  return ctx
 }
