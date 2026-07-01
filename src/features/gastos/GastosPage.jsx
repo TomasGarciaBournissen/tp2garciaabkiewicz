@@ -2,12 +2,10 @@ import { useState } from 'react'
 import { useGastos } from './useGastos'
 import GastoForm from './GastoForm'
 import GastoItem from './GastoItem'
+import { formatARS, mesLabel } from '../../lib/format'
+import { filtrarPorCategoria } from '../../lib/gastosUtils'
 
 const CATEGORIAS = ['Todas', 'Alimentación', 'Transporte', 'Entretenimiento', 'Salud', 'Educación', 'Hogar', 'Otro']
-
-function formatARS(n) {
-  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n)
-}
 
 export default function GastosPage() {
   const { gastos, loading, total, crearGasto, actualizarGasto, eliminarGasto } = useGastos()
@@ -15,8 +13,8 @@ export default function GastosPage() {
   const [editing, setEditing] = useState(null)
   const [filtro, setFiltro] = useState('Todas')
 
-  const mes = new Date().toLocaleString('es-AR', { month: 'long', year: 'numeric' }).toUpperCase()
-  const gastosFiltrados = filtro === 'Todas' ? gastos : gastos.filter(g => g.categoria === filtro)
+  const mes = mesLabel()
+  const gastosFiltrados = filtrarPorCategoria(gastos, filtro)
 
   async function handleCreate(fields) {
     await crearGasto(fields)

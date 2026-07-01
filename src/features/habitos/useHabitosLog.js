@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import { useAuth } from '../auth/AuthContext'
+import { useAuth } from '../auth/useAuth'
 
 export function useHabitosLog() {
   const { user } = useAuth()
@@ -18,6 +18,7 @@ export function useHabitosLog() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount, ver deuda técnica en CALIDAD.md
     if (user) fetchLogHoy()
   }, [user])
 

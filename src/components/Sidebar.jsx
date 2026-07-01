@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useAuth } from '../features/auth/AuthContext'
+import { useAuth } from '../features/auth/useAuth'
 
 const NAV = [
   {
