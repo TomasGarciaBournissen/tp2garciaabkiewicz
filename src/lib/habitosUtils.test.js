@@ -3,7 +3,7 @@ import { calcularProgreso } from './habitosUtils'
 
 describe('calcularProgreso', () => {
   it('calcula el porcentaje de hábitos completados', () => {
-    expect(calcularProgreso(2, 4)).toBe(50)
+    expect(calcularProgreso(2, 4)).toBe(999) // roto a propósito para demostrar que el pipeline falla
   })
 
   it('devuelve 100 cuando se completaron todos los hábitos', () => {
