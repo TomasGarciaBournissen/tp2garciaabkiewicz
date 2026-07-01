@@ -63,11 +63,12 @@ npm run dev
 ### Branching
 
 ```
-main          → siempre funcional, deployado
-develop       → integración
-feature/tomi-*      → features de Tomas Garcia
-feature/companero-* → features de Tomas Abkiewicz
+main            → siempre funcional, deployado a producción
+feature/<nombre-feature>  → nueva funcionalidad (ej. feature/ci-cd-pipeline)
+fix/<nombre-bug>          → corrección de un bug (ej. fix/total-gastos-negativo)
 ```
+
+Cada rama se abre desde un issue existente y se mergea a `main` vía Pull Request (ver [Flujo de trabajo](#flujo-de-trabajo)). Ninguna rama se mergea directo sin PR.
 
 ### Conventional Commits
 
@@ -86,9 +87,44 @@ test:     tests
 - `0.1.0` → versión inicial de desarrollo
 - `0.2.0` → primera entrega funcional completa
 
-### Flujo de PRs
+### Flujo de trabajo
 
-Cada feature branch se abre como PR contra su rama base (ver `INSTRUCCIONES_PR.md`). Los merges se hacen desde la UI de GitHub manteniendo el historial de commits.
+1. Cada funcionalidad o bug a resolver tiene un **issue** en GitHub con título descriptivo y descripción breve antes de empezar a trabajar.
+2. Se crea una rama `feature/*` o `fix/*` desde `main` para resolver ese issue.
+3. Se abre un **Pull Request** contra `main` que referencia el issue (`Closes #N`).
+4. El PR pasa por revisión (al menos un comentario real, no una aprobación vacía) antes de mergear.
+5. El pipeline de CI (lint → tests → build) corre automáticamente en el PR; si falla, no se mergea.
+6. Al mergear a `main`, el pipeline vuelve a correr y, si todo pasa, deploya automáticamente a producción.
+
+---
+
+## CI/CD
+
+El pipeline (`.github/workflows/ci.yml`) corre en cada push y PR a `main`:
+
+```
+lint ─┐
+unit-tests ─┼─► build ─► deploy (solo en push a main)
+e2e-tests ─┘
+```
+
+- **lint** — `npm run lint` (ESLint).
+- **unit-tests** — `npm run test` (Vitest) sobre la lógica de negocio en `src/lib/`.
+- **e2e-tests** — `npm run test:e2e` (Playwright) sobre el flujo principal, con Supabase mockeado a nivel de red.
+- **build** — `npm run build`, solo corre si los tres jobs anteriores pasaron.
+- **deploy** — deploy a producción en Vercel vía Vercel CLI, solo corre si `build` pasó **y** el evento es un push a `main` (nunca en un PR).
+
+El razonamiento completo de cada decisión de diseño del pipeline está en [`CALIDAD.md`](CALIDAD.md).
+
+### Secrets necesarios en GitHub
+
+Para que el job de `deploy` funcione, el repo necesita estos secrets (Settings → Secrets and variables → Actions):
+
+| Secret | De dónde sale |
+|---|---|
+| `VERCEL_TOKEN` | vercel.com → Account Settings → Tokens |
+| `VERCEL_ORG_ID` | `.vercel/project.json` tras `vercel link`, o Vercel → Project Settings → General |
+| `VERCEL_PROJECT_ID` | idem |
 
 ---
 
@@ -107,6 +143,25 @@ Cada feature branch se abre como PR contra su rama base (ver `INSTRUCCIONES_PR.m
 - [ ] Gráficos de gastos por categoría
 - [ ] Exportar gastos a CSV
 - [ ] Notificaciones de hábitos pendientes
+
+### Entrega 3 — TP3 DevOps (CI/CD)
+- [x] Tests unitarios con Vitest sobre lógica de negocio
+- [x] Test E2E con Playwright del flujo principal
+- [x] Pipeline de CI/CD con GitHub Actions (lint → tests → build → deploy)
+- [x] Documentación de calidad (`CALIDAD.md`)
+- [x] PR template con checklist de revisión
+
+---
+
+## Testing
+
+```bash
+npm run test         # unitarios (Vitest)
+npm run test:watch   # unitarios en modo watch
+npm run test:e2e     # E2E (Playwright, con Supabase mockeado)
+```
+
+Ambos corren dentro del pipeline de CI en cada push/PR a `main`. El detalle de qué cubre cada test está en [`CALIDAD.md`](CALIDAD.md).
 
 ---
 
@@ -134,3 +189,5 @@ Todas las tablas tienen RLS activado. Las policies aplican `auth.uid() = user_id
 |---|---|---|
 | Tomas Garcia | [@TomasGarciaBournissen](https://github.com/TomasGarciaBournissen) | Dev 1 — Auth + Gastos + Setup |
 | Tomas Abkiewicz | tomas.abkiewicz1 | Dev 2 — Hábitos + Dashboard + Schema |
+
+> El TP3 (CI/CD, testing y `CALIDAD.md`) fue realizado en solitario por Tomas Garcia.
