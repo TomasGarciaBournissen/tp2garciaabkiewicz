@@ -2,7 +2,7 @@
 
 Aplicación web serverless para registrar y visualizar hábitos personales y gastos en ARS.
 
-🔗 **Deploy**: [tp2-garcia-abkiewicz.vercel.app](https://tp2-garcia-abkiewicz.vercel.app) _(configurar en Vercel luego del primer merge a main)_
+🔗 **Deploy**: [tp2garciaabkiewicz.vercel.app](https://tp2garciaabkiewicz.vercel.app)
 
 ---
 
@@ -40,15 +40,18 @@ npm run dev
 
 ## Deploy en Vercel
 
-1. Ir a [vercel.com](https://vercel.com) → **Add New Project**.
-2. Conectar el repo `TomasGarciaBournissen/tp2-garcia-abkiewicz`.
-3. Framework preset: **Vite** (se detecta automáticamente).
-4. En **Environment Variables**, agregar:
-   - `VITE_SUPABASE_URL` → tu Project URL de Supabase
-   - `VITE_SUPABASE_ANON_KEY` → tu anon key de Supabase
-5. Click en **Deploy**.
-6. Vercel asigna una URL automáticamente. Actualizar el link del README con esa URL.
-7. Cada push a `main` dispara un redeploy automático.
+El proyecto ya está vinculado a Vercel (`tomas-projects/tp2garciaabkiewicz`) con las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` configuradas en **Environment Variables**.
+
+A partir del TP3, el deploy a producción **no** lo dispara la integración automática de Git de Vercel (se desconectó a propósito): lo dispara exclusivamente el job `deploy` del pipeline de CI/CD, y solo si `lint`, `unit-tests`, `e2e-tests` y `build` pasaron antes. Ver la sección [CI/CD](#cicd) para el detalle.
+
+Para deployar manualmente en un ambiente propio (por ejemplo, para probar el setup desde cero):
+
+```bash
+npx vercel link   # vincula el directorio local al proyecto de Vercel
+npx vercel pull --environment=production
+npx vercel build --prod
+npx vercel deploy --prebuilt --prod
+```
 
 ### Configurar Supabase (primera vez)
 
